@@ -7,9 +7,12 @@
 #define SerialManager_h
 
 #include "Arduino.h"
+#include "PacketTypes.h"
 
 #define SER Serial
+#define DEBUG_SER Serial1
 #define BUF_SIZE 128
+#define MAX_FIELDS_SIZE 10
 #define SERIAL_TIMEOUT 100
 
 class SerialManager
@@ -17,17 +20,23 @@ class SerialManager
     public:
         SerialManager(int baud_rate_param);
         void init();
-        int handle_packet(int packet[]);
+        int receive_packet();
+        int retrieve_packet(MotorCmd &packet);
 
     private:
-        char packet_buffer[BUF_SIZE];
         int baud_rate;
         char start_char;
         char end_char;
+        char receive_buffer[BUF_SIZE];
+        int current_packet[MAX_FIELDS_SIZE];
+        int current_packet_type;
 
-        int receive_packet();
-        int process_packet(int packet[]);
-        int clear_buffer();
+        int store_packet();
+        void split_packet(int &packet_length);
+        bool is_valid_packet(int packet_length, int &packet_type);
+        bool is_known_type(int packet_type);
+        void clear_receive_buffer();
+        void clear_current_packet();
 };
 
 #endif

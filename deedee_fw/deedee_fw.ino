@@ -11,17 +11,17 @@ void setup() {
 }
 
 void loop() {
-    int packet[3];
-    int new_packet = serman.handle_packet(packet);
-    if(new_packet==0)
+    int packet_type = serman.receive_packet();
+    if(packet_type>=0)
     {
-        Serial.print("Field: ");
-        Serial.print(packet[0]);
-        Serial.print(" ; Left speed: ");
-        Serial.print(packet[1]);
-        Serial.print(" ; Right speed: ");
-        Serial.println(packet[2]);
-        motors.send_speeds(packet[1], packet[2]);
+        switch(packet_type)
+        {
+            case MMC:
+                MotorCmd cmd;
+                serman.retrieve_packet(cmd);
+                motors.send_speeds(cmd.speed_left, cmd.speed_right);
+                break;
+        }
     }
 }
 

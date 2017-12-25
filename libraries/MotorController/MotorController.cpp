@@ -50,11 +50,11 @@ void MotorController::set_motor_directions(int speed_left, int speed_right)
     digitalWrite(direction_pin_left, direction_left);
     digitalWrite(direction_pin_right, direction_right);
 
-    Serial.print("Directions (L,R): (");
-    Serial.print(direction_left);
-    Serial.print(",");
-    Serial.print(direction_right);
-    Serial.println(")");
+    DEBUG_SER.print("Directions (L,R): (");
+    DEBUG_SER.print(direction_left);
+    DEBUG_SER.print(",");
+    DEBUG_SER.print(direction_right);
+    DEBUG_SER.println(")");
 }
 
 void MotorController::set_motor_speeds(int speed_left, int speed_right)
@@ -62,16 +62,22 @@ void MotorController::set_motor_speeds(int speed_left, int speed_right)
     speed_left = map(speed_left, 0, 100, 0, max_motor_speed);
     speed_right = map(speed_right, 0, 100, 0, max_motor_speed);
 
-    speed_left = min(speed_left, max_motor_speed);
-    speed_right = min(speed_right, max_motor_speed);
+    speed_left = sign(speed_left) * min(abs(speed_left), max_motor_speed);
+    speed_right = sign(speed_right) * min(abs(speed_right), max_motor_speed);
 
     analogWrite(speed_pin_left, speed_left);
     analogWrite(speed_pin_right, speed_right);
 
-    Serial.print("Speeds (L,R): (");
-    Serial.print(speed_left);
-    Serial.print(",");
-    Serial.print(speed_right);
-    Serial.println(")");
+    DEBUG_SER.print("Speeds (L,R): (");
+    DEBUG_SER.print(speed_left);
+    DEBUG_SER.print(",");
+    DEBUG_SER.print(speed_right);
+    DEBUG_SER.println(")");
 }
 
+int MotorController::sign(int value)
+{
+    if(value > 0) return 1;
+    if(value < 0) return -1;
+    return 0;
+}

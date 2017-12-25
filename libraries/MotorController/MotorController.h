@@ -9,6 +9,8 @@
 
 #include "Arduino.h"
 
+#define DEBUG_SER Serial
+
 class MotorController
 {
     public:
@@ -26,6 +28,7 @@ class MotorController
         void setup_control_pins();
         void set_motor_directions(int speed_left, int speed_right);
         void set_motor_speeds(int speed_left, int speed_right);
+        int sign(int value);
 };
 
 #endif
