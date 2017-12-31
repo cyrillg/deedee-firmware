@@ -62,11 +62,14 @@ void MotorController::set_motor_speeds(int speed_left, int speed_right)
     speed_left = map(speed_left, 0, 100, 0, max_motor_speed);
     speed_right = map(speed_right, 0, 100, 0, max_motor_speed);
 
-    speed_left = sign(speed_left) * min(abs(speed_left), max_motor_speed);
-    speed_right = sign(speed_right) * min(abs(speed_right), max_motor_speed);
+    int abs_speed_left = abs(speed_left);
+    int abs_speed_right = abs(speed_right);
 
-    analogWrite(speed_pin_left, speed_left);
-    analogWrite(speed_pin_right, speed_right);
+    speed_left = sign(speed_left) * min(abs_speed_left, max_motor_speed);
+    speed_right = sign(speed_right) * min(abs_speed_right, max_motor_speed);
+
+    analogWrite(speed_pin_left, abs_speed_left);
+    analogWrite(speed_pin_right, abs_speed_right);
 
     DEBUG_SER.print("Speeds (L,R): (");
     DEBUG_SER.print(speed_left);
